@@ -19,7 +19,12 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > keyfile
         chmod 600 keyfile
+        
+        # Create .ssh directory
         mkdir -p ~/.ssh
-        cp known_hosts ~/.ssh/known_hosts
-        ssh -t -i keyfile ubuntu@ec2-user@ec2-3-89-23-13.compute-1.amazonaws.com "sudo bash ~/deploy.sh"
-
+        
+        # Add the server's host key to known_hosts
+        ssh-keyscan -H ec2-3-89-23-13.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+        
+        # Execute the deployment script on the remote server
+        ssh -i keyfile ubuntu@ec2-3-89-23-13.compute-1.amazonaws.com "sudo bash ~/deploy.sh"
