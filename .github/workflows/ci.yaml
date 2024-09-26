@@ -25,4 +25,7 @@ jobs:
         ssh-keyscan -H ec2-3-89-23-13.compute-1.amazonaws.com >> ~/.ssh/known_hosts
         
         # Use todo-key.pem instead of keyfile
-        ssh -t -i todo-key.pem ubuntu@ec2-3-89-23-13.compute-1.amazonaws.com "sudo bash ~/deploy.sh"
+        ssh -t -i todo-key.pem ubuntu@ec2-3-89-23-13.compute-1.amazonaws.com "sudo bash ~/deploy.sh" || { echo 'SSH command failed'; exit 1; }
+        
+        # Clean up
+        rm -f todo-key.pem
