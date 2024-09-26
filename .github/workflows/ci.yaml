@@ -13,19 +13,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: SSH and deploy
+    - name: Setup SSH
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
+        # Create the private key file
         echo "$SSH_PRIVATE_KEY" > todo-key.pem
         chmod 600 todo-key.pem
         mkdir -p ~/.ssh
         
         # Create known_hosts file if it doesn't exist
         ssh-keyscan -H ec2-3-89-23-13.compute-1.amazonaws.com >> ~/.ssh/known_hosts
-        
-        # Use todo-key.pem instead of keyfile
+
+    - name: SSH and deploy
+      run: |
+        # Execute the deployment script on the remote server
         ssh -t -i todo-key.pem ubuntu@ec2-3-89-23-13.compute-1.amazonaws.com "sudo bash ~/deploy.sh" || { echo 'SSH command failed'; exit 1; }
         
-        # Clean up
+        # Clean up the private key file after use
         rm -f todo-key.pem
