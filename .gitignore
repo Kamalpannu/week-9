@@ -1,0 +1,10 @@
+# Ignore known_hosts file
+known_hosts
+
+# Ignore the private key file
+todo-key.pem
+
+# Other ignored patterns (if any)
+node_modules/
+*.log
+.env
